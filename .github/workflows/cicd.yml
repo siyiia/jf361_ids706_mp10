@@ -1,0 +1,41 @@
+name: CICD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: install packages
+        run: make install
+      - name: format code
+        run: make format
+      - name: lint
+        run: make lint
+      - name: test
+        run: make test
+      - name: run
+        run: make run
+      - name: push report
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --local user.email "push_report@test.com"
+            git config --local user.name "Push Report"
+            git add .
+            git commit -m "Add report" 
+            git push
+          else
+            echo "No changes to commit"
+          fi
