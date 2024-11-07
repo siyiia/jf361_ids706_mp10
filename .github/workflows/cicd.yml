@@ -33,7 +33,7 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             git config --local user.email "push_report@test.com"
             git config --local user.name "Push Report"
-            git add .
+            git add result_report.md
             git commit -m "Add report" 
             git push
           else
