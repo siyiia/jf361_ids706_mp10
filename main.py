@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
+import os
 
 
 def start_spark(appName):
@@ -12,7 +13,11 @@ def stop_spark(spark):
 
 
 def generate_report(content, title, filename="./result_report.md"):
-    with open(filename, "a", encoding="utf-8") as file:
+    if not os.path.exists(filename):
+        mode = "w"
+    else:
+        mode = "a"
+    with open(filename, mode, encoding="utf-8") as file:
         file.write(f"\n## {title}\n")
         file.write(f"{content}\n")
 
