@@ -4,3 +4,4 @@ black
 nbval
 pyspark
 pandas
+tabulate

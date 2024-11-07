@@ -1,4 +1,5 @@
 # jf361_ids706_mp10
+[![CICD](https://github.com/siyiia/jf361_ids706_mp10/actions/workflows/cicd.yml/badge.svg)](https://github.com/siyiia/jf361_ids706_mp10/actions/workflows/cicd.yml)
 
 ## Project Introduction
 This project is to use PySpark to process data.
