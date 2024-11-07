@@ -12,11 +12,9 @@ def stop_spark(spark):
     print("Spark Stopped")
 
 
-def generate_report(content, title, filename="./result_report.md"):
-    if not os.path.exists(filename):
-        mode = "w"
-    else:
-        mode = "a"
+def generate_report(content, title, filename="./result_report.md", write_to_file=False, mode='a'):
+    if not write_to_file:
+            return
     with open(filename, mode, encoding="utf-8") as file:
         file.write(f"\n## {title}\n")
         file.write(f"{content}\n")
@@ -25,7 +23,7 @@ def generate_report(content, title, filename="./result_report.md"):
 def data_process(spark):
     df = spark.read.option("header", True).csv("dataset.txt")
     generate_report(
-        df.limit(10).toPandas().to_markdown(), "Overview of Original Dataset"
+        df.limit(10).toPandas().to_markdown(), "Overview of Original Dataset", write_to_file=True, mode='w'
     )
 
     # Handling missing values: Drop rows with any nulls
@@ -37,7 +35,7 @@ def data_process(spark):
 
     summary_df = df.describe()
     generate_report(
-        summary_df.toPandas().to_markdown(), "Descriptive Statistics of Data"
+        summary_df.toPandas().to_markdown(), "Descriptive Statistics of Data", write_to_file=True
     )
     return df
 
@@ -45,7 +43,7 @@ def data_process(spark):
 def query(query_str, spark, df, table_name):
     df.createOrReplaceTempView(table_name)
     result_df = spark.sql(query_str)
-    generate_report(result_df.toPandas().to_markdown(), "SQL Query Result")
+    generate_report(result_df.toPandas().to_markdown(), "SQL Query Result", write_to_file=True)
     return result_df
 
 
@@ -57,7 +55,7 @@ def transform_data(df, threshold=500):
         col("Adjusted_Altitude").cast("float") > threshold
     )
     generate_report(
-        filter_df.limit(10).toPandas().to_markdown(), "Transformed Data Overview"
+        filter_df.limit(10).toPandas().to_markdown(), "Transformed Data Overview", write_to_file=True
     )
     return filter_df
 
